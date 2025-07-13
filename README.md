@@ -21,7 +21,7 @@ Create Your Own Web Application Firewall using SafeLine WAF
 <br><br>
 <img src="SS/ping from Kali.png">  <br><br><br>
 <img src="SS/ping from ubuntu.png">  <br><br><br>
---------------------- Add image ------------------------------
+
 </details>
 
 # ########################################################################
@@ -68,7 +68,7 @@ Add:  &ensp;  10.0.0.147 dvwa.local
 <img src="SS/dsn res kali.png">  <br><br><br>
 
 
---------------------Add image dns------------------------
+
 This will allow to access DVWA at http://dvwa.local:8080/DVWA/ from Kali.
 
 <br>
@@ -82,7 +82,7 @@ This will allow to access DVWA at http://dvwa.local:8080/DVWA/ from Kali.
 
 <br><br>
 <img src="SS/installing openssl.png">  <br><br><br>
-----------------------------add image install openssl---------------------------
+
 
 <br>
 <br>
@@ -109,7 +109,7 @@ Rename to DVWA/config/config.inc.php.
 
 <br><br>
 <img src="SS/config.php.png">  <br><br><br>
-----------------------add image config.php-------------------------------------
+
 
 - Create DVWA database:
   ```bash
@@ -165,7 +165,7 @@ to:
 
 <br><br>
 <img src="SS/default.conf.png">  <br><br><br>
---------------------------add image default--------------------------
+
 
 <br>
 <br>
@@ -194,7 +194,6 @@ Access the dashboard at https://10.0.0.147:9443 with provided credentials.Refere
 <br><br>
 <img src="SS/install cred.png">  <br><br><br>
 
------------------------------Screenshot: SafeLine WAF installation complete.   install safeline     install cred------------------------
 
 </details>
 
@@ -214,7 +213,7 @@ Use a 7-day PRO license trial (code: ZFGYUXVXABSUH7KTMQG4FG4B).
 
 <br><br>
 <img src="SS/dashboard.png">  <br><br><br>
-----------------------Screenshot: Dashboard with DVWA added.---------------------------
+
 
 4.2 Setting up Application Rules
 
@@ -235,7 +234,7 @@ Requires SSL certificate.
 
 <br><br>
 <img src="SS/private.png">  <br><br><br>
----------------------------------private ------------------------------------------------
+
 
 - Generate SSL certificate:
   ```bash
@@ -245,14 +244,13 @@ Requires SSL certificate.
 <img src="SS/ssl key.png">  <br><br><br>
 
 
---------------------------ssl key -------------------------------------------
 
 
 Import into SafeLine:
 
 <br><br>
 <img src="SS/import.png">  <br><br><br>
-------------------------------<Import image> -----------------------------
+
 
 4.4 Testing the Application Rule from Kali Browser
 Access http://dvwa.local from Kali; it redirects to https://dvwa.local.  
@@ -262,7 +260,7 @@ Access http://dvwa.local from Kali; it redirects to https://dvwa.local.
 <img src="SS/https 1.png">  <br><br><br>
 <img src="SS/https 2.png">  <br><br><br>
 <img src="SS/https 3.png">  <br><br><br>
---------------------------- https 1 and 2 3------------------------------
+
 
 </details>
 
@@ -278,7 +276,13 @@ Set rate limiting (block IPs after 3 requests in 10 seconds for 5 minutes):
 
 Test by accessing DVWA multiple times from Kali.
 Check SafeLine dashboard for blocked IPs.
--------------------- flood 1 2 3 4 ------------------------------------
+
+<br><br>
+<img src="SS/flood 1.png">  <br><br><br>
+<img src="SS/flood 2.png">  <br><br><br>
+<img src="SS/flood 3.png">  <br><br><br>
+<img src="SS/flood 4.png">  <br><br><br>
+
 
 </details>
 
@@ -295,7 +299,12 @@ Enable authentication in SafeLine:
 Credentials: admin / password
 Test from Kali; an authentication page appears before DVWA.
 
---------------------------- auth 1 2 3 --------------------------------------------------------
+<br><br>
+<img src="SS/auth 1.png">  <br><br><br>
+<img src="SS/auth 2.png">  <br><br><br>
+<img src="SS/auth 3.png">  <br><br><br>
+
+
 
 </details>
 
@@ -310,7 +319,12 @@ Block Kali IP (10.0.0.41):
 
 Add deny rule in SafeLine.
 Test from Kali; access is blocked.
----------------------------- custom 1 2 ---------------------------------------------------------
+
+<br><br>
+<img src="SS/custom 1.png">  <br><br><br>
+<img src="SS/custom 2.png">  <br><br><br>
+
+
 
 </details>
 
@@ -327,12 +341,22 @@ Test from Kali; access is blocked.
 In DVWA, set security to low, try SQL injection (e.g., admin' OR '1'='1).
 SafeLine blocks it; check dashboard logs.
 Screenshot: SQL injection blocked by SafeLine.
--------------------------------balanced 1 2 -------------------------------
+
+<br><br>
+<img src="SS/balanced 1.png">  <br><br><br>
+<img src="SS/balanced 2.png">  <br><br><br>
+
+
 8.2 Disabling Attack Rules
 
 Disable SafeLine attack rules; SQL injection succeeds, revealing usernames/passwords.
 Screenshot: SQL injection succeeds without rules.
--------------------------------disable 1 2 ----------------------------------
+
+<br><br>
+<img src="SS/disable 1.png">  <br><br><br>
+<img src="SS/disable 2.png">  <br><br><br>
+
+
 </details>
 
 # ########################################################################
@@ -345,7 +369,10 @@ Screenshot: SQL injection succeeds without rules.
 
 View SafeLine dashboard for request counts, blocked IPs, and attack logs.  
 
-----------------------------------------stat -----------------------------------------
+
+<br><br>
+<img src="SS/stat.png">  <br><br><br>
+
 
 </details>
 
