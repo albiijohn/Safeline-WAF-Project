@@ -4,6 +4,7 @@ Cybersecurity homelab with SafeLine WAF, DVWA, Kali Linux and Ubuntu on VMware
 Create Your Own Web Application Firewall using SafeLine WAF
 # ########################################################################
 <details>
+  
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 1: Installing Both Machines on VMware</summary>
 
 - **Kali Linux (IP: 10.0.0.41)**:
@@ -16,6 +17,7 @@ Create Your Own Web Application Firewall using SafeLine WAF
   ```bash
   ping 10.0.0.147  # From Kali
   ping 10.0.0.41   # From Ubuntu
+--------------------- Add image ------------------------------
 </details>
 
 # ########################################################################
@@ -24,39 +26,78 @@ Create Your Own Web Application Firewall using SafeLine WAF
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 2: Prerequisites</summary>
 
-2.1 DNS Resolution Setup
+<h2>2.1 Clone DVWA from git:</h2>
+
+- Clone DVWA (or download):
+  ```bash
+  cd /var/www/html
+  sudo git clone https://github.com/digininja/DVWA.git
+
+- If git is not installed, install it first:
+  ```bash
+  sudo apt-get install -y git
+<br>
+<br>
+<h2>2.2.Set File Permissions:</h2>
+
+- 
+  ```bash
+  sudo chown -R www-data:www-data DVWA
+  sudo chmod -R 755 DVWA
+Configure DVWA Database:
+
+
+<br>
+<br>
+
+<h2>2.3 DNS Resolution Setup</h2>
+
+
 - Edit /etc/hosts on both Kali and Ubuntu:
     ```bash
   sudo nano /etc/hosts
 
-Add:
-10.0.0.147 dvwa.local
+Add:  &ensp;  10.0.0.147 dvwa.local
+--------------------Add image dns------------------------
+This will allow to access DVWA at http://dvwa.local:8080/DVWA/ from Kali.
 
-Access DVWA at http://dvwa.local:8080/DVWA from Kali.
+<br>
+<br>
 
-2.2 Ubuntu Configurations
+<h2>2.4 Ubuntu Configurations</h2>
 
-2.2.1 Installing OpenSSL
 - Installing OpenSSL
-- ```bash
-    sudo apt-get install -y openssl
+  ```bash
+  sudo apt-get install -y openssl
+----------------------------add image install openssl---------------------------
 
-2.2.2 Installing and Configuring LAMP Stack
-Install Apache2, PHP, and MySQL:
-- ```bash
+<br>
+<br>
+
+- Installing and Configuring LAMP Stack : this install Apache2, PHP and MySQL:
+  ```bash
   sudo apt-get install -y apache2 php php-mysql mysql-server
   sudo mysql_secure_installation
+Set MySQL root password: ubuntu(for testing purpose).
 
-Set MySQL root password: ubuntu.
-Configure DVWA (/var/www/html/DVWA/config/config.inc.php):
-- ```bash
-    sudo cp /var/www/html/DVWA/config/config.inc.php.dist /var/www/html/DVWA/config/config.inc.php
-    sudo sed -i "s/'db_user' => '.*'/'db_user' => 'dvwa_user'/" /var/www/html/DVWA/config/config.inc.php
-    sudo sed -i "s/'db_password' => '.*'/'db_password' => 'p@ssw0rd'/" /var/www/html/DVWA/config/config.inc.php
-    sudo sed -i "s/'db_database' => '.*'/'db_database' => 'dvwa'/" /var/www/html/DVWA/config/config.inc.php
+<br>
+<br>
 
-Create DVWA database:
-- ```bash
+- DVWA has a config file at DVWA/config/config.inc.php. Update it if necessary:
+  ```bash
+  $DBMS = 'MySQL';
+  $db = 'dvwa';
+  $user = 'dvwa_user';
+  $pass = 'p@ssw0rd';
+  $host = 'localhost';
+
+Note: This is what the config.php file could be shwoing as DVWA/config/config.inc.php.dist
+Rename to DVWA/config/config.inc.php.
+
+----------------------add image config.php-------------------------------------
+
+- Create DVWA database:
+  ```bash
   sudo mysql -u root -p
   CREATE DATABASE dvwa;
   CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'p@ssw0rd';
@@ -64,9 +105,27 @@ Create DVWA database:
   FLUSH PRIVILEGES;
   exit;
 
-2.2.3 Changing the DVWA Listening Port to 8080
-Edit Apache configuration:
-- ```bash
+- Create a new database and user in MySQL:
+  ```bash
+  sudo mysql -u root -p
+  CREATE DATABASE dvwa;
+  CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'p@ssw0rd';
+  GRANT ALL ON dvwa.* TO 'dvwa_user'@'localhost';
+  FLUSH PRIVILEGES;
+  exit;
+<br>
+
+To Initialize DVWA:
+Navigate to http://dvwa.local/setup.php in your browser. <br>
+Click **`[Create/ResetDatabase]`**.
+
+<br>
+<br>
+
+<h2>2.5. Changing the DVWA Listening Port to 8080</h2>
+
+- Edit Apache configuration:
+  ```bash
   sudo nano /etc/apache2/ports.conf
 
 Change:
@@ -75,9 +134,13 @@ Listen 80
 to:
 Listen 8080
 
-Update virtual host:
-- ```bash
-  sudo nano /etc/apache2/sites-available/000-default.conf
+<br>
+
+<h2>2.6 Changing the Virtual host to Port</h2>
+
+- Edit the apache Virtual host:
+  ```bash
+   sudo nano /etc/apache2/sites-available/000-default.conf
 
 Change:
 <VirtualHost *:80>
@@ -85,8 +148,13 @@ Change:
 to:
 <VirtualHost *:8080>
 
-Restart Apache:
-- ```bash
+--------------------------add image default--------------------------
+
+<br>
+<br>
+
+- Restart Apache:
+  ```bash
   sudo systemctl restart apache2
 
 
@@ -100,13 +168,13 @@ Screenshot: LAMP stack configured and DVWA accessible.
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 3: Installing SafeLine in Ubuntu</summary>
 
-Install SafeLine WAF:
-- ```bash
+- Install SafeLine WAF:
+  ```bash
   bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
 
 Access the dashboard at https://10.0.0.147:9443 with provided credentials.Reference: safepoint.cloud  
 
-Screenshot: SafeLine WAF installation complete.
+-----------------------------Screenshot: SafeLine WAF installation complete.   install safeline     install cred------------------------
 
 </details>
 
@@ -122,7 +190,7 @@ Application Tab: Add DVWA (www.dvwa.local, port 443, reverse proxy to http://10.
 HTTP Flood: Protects against DoS with rate limiting.
 Auth: Provides username/password authentication.
 Use a 7-day PRO license trial (code: ZFGYUXVXABSUH7KTMQG4FG4B).
-Screenshot: Dashboard with DVWA added.
+----------------------Screenshot: Dashboard with DVWA added.---------------------------
 
 4.2 Setting up Application Rules
 
@@ -132,24 +200,30 @@ Reverse Proxy: http://10.0.0.147:8080
 Requires SSL certificate.
 
 4.3 Creating SSL Certificate
-Generate SSL certificate:
-- ```bash
-  sudo mkdir /etc/ssl/dvwa
+- Generate private key:
+  ```bash
+  openssl genrsa -out private.key 4096
+  
+- Generate private.csr:
+  ```bash
+  openssl req -new -key private.key -out private.csr
+---------------------------------private ------------------------------------------------
 
-- ```bash
-  sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout /etc/ssl/dvwa/dvwa.key \
-  -out /etc/ssl/dvwa/dvwa.crt
+- Generate SSL certificate:
+  ```bash
+  openssl x509 -req -days 365 -in private.csr -signkey private.key -out private.crt
+
+--------------------------ssl key -------------------------------------------
+
 
 Import into SafeLine:
 
-Certificate: /etc/ssl/dvwa/dvwa.crt
-Key: /etc/ssl/dvwa/dvwa.key
+------------------------------<Import image> -----------------------------
 
 4.4 Testing the Application Rule from Kali Browser
 Access http://dvwa.local from Kali; it redirects to https://dvwa.local.  
 
-Screenshot: Successful HTTPS redirection.
+--------------------------- https 1 and 2 3------------------------------
 
 </details>
 
@@ -165,7 +239,7 @@ Set rate limiting (block IPs after 3 requests in 10 seconds for 5 minutes):
 
 Test by accessing DVWA multiple times from Kali.
 Check SafeLine dashboard for blocked IPs.
-Screenshot: HTTP flood protection in action.
+-------------------- flood 1 2 3 4 ------------------------------------
 
 </details>
 
@@ -181,7 +255,8 @@ Enable authentication in SafeLine:
 
 Credentials: admin / password
 Test from Kali; an authentication page appears before DVWA.
-Screenshot: Authentication prompt before DVWA.
+
+--------------------------- auth 1 2 3 --------------------------------------------------------
 
 </details>
 
@@ -196,7 +271,7 @@ Block Kali IP (10.0.0.41):
 
 Add deny rule in SafeLine.
 Test from Kali; access is blocked.
-Screenshot: Custom rule blocking Kali IP.
+---------------------------- custom 1 2 ---------------------------------------------------------
 
 </details>
 
@@ -213,12 +288,12 @@ Screenshot: Custom rule blocking Kali IP.
 In DVWA, set security to low, try SQL injection (e.g., admin' OR '1'='1).
 SafeLine blocks it; check dashboard logs.
 Screenshot: SQL injection blocked by SafeLine.
-
+-------------------------------balanced 1 2 -------------------------------
 8.2 Disabling Attack Rules
 
 Disable SafeLine attack rules; SQL injection succeeds, revealing usernames/passwords.
 Screenshot: SQL injection succeeds without rules.
-
+-------------------------------disable 1 2 ----------------------------------
 </details>
 
 # ########################################################################
@@ -231,7 +306,7 @@ Screenshot: SQL injection succeeds without rules.
 
 View SafeLine dashboard for request counts, blocked IPs, and attack logs.  
 
-Screenshot: Statistics overview in SafeLine.
+----------------------------------------stat -----------------------------------------
 
 </details>
 
