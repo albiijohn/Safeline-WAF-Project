@@ -4,7 +4,7 @@ Cybersecurity homelab with SafeLine WAF, DVWA, Kali Linux and Ubuntu on VMware
 Create Your Own Web Application Firewall using SafeLine WAF
 # ########################################################################
 <details>
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 1: Installing Both Machines on VMware</summary>
+<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;"><h1>Step 1: Installing Both Machines on VMware</h1></summary>
 
 - **Kali Linux (IP: 10.0.0.41)**:
   - Download from [kali.org](https://www.kali.org/get-kali).
