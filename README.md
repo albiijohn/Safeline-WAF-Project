@@ -1,7 +1,19 @@
-# Safeline-WAF-Project
-Cybersecurity homelab with SafeLine WAF, DVWA, Kali Linux and Ubuntu on VMware
-
+# Safeline-WAF
 Create Your Own Web Application Firewall using SafeLine WAF
+
+
+
+<h1>About SafeLine</h1>
+SafeLine is an advanced Web Application Firewall (WAF) designed to protect web applications from a wide range of cyber threats with robust security measures. Developed by Chaitin Tech, it offers an open-source solution that combines ease of deployment with powerful protection capabilities. Ideal for both enterprise and individual use, SafeLine safeguards applications like the Damn Vulnerable Web Application (DVWA) in this cybersecurity homelab project. It integrates seamlessly with platforms such as Ubuntu Server, providing real-time threat detection and mitigation. This project demonstrates SafeLine's effectiveness in securing web applications against attacks like SQL injection.
+
+<br><br>
+Key Features of SafeLine:
+<li>Comprehensive Threat Protection: Detects and blocks various attacks, including SQL injection, XSS, and brute force attempts, ensuring robust application security.
+<li>HTTP Flood Defense: Implements rate-limiting to mitigate denial-of-service (DoS) attacks, protecting server resources from excessive requests.
+<li>Customizable Rules: Allows users to create tailored rules, such as blocking specific IPs (e.g., 10.0.0.41), for precise security control.
+<li>SSL/TLS Support: Supports secure communication by integrating self-signed or custom SSL certificates for encrypted connections.
+<li>User-Friendly Dashboard: Provides an intuitive interface for monitoring traffic, analyzing attack logs, and configuring security settings in real time.
+
 # ########################################################################
 <details>
   
