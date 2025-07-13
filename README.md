@@ -175,8 +175,6 @@ to:
   sudo systemctl restart apache2
 
 
-Screenshot: LAMP stack configured and DVWA accessible.
-
 </details>
 
 # ########################################################################
@@ -188,8 +186,13 @@ Screenshot: LAMP stack configured and DVWA accessible.
 - Install SafeLine WAF:
   ```bash
   bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
+<br><br>
+<img src="SS/install safeline.png">  <br><br><br>
 
 Access the dashboard at https://10.0.0.147:9443 with provided credentials.Reference: safepoint.cloud  
+
+<br><br>
+<img src="SS/install cred.png">  <br><br><br>
 
 -----------------------------Screenshot: SafeLine WAF installation complete.   install safeline     install cred------------------------
 
@@ -207,6 +210,10 @@ Application Tab: Add DVWA (www.dvwa.local, port 443, reverse proxy to http://10.
 HTTP Flood: Protects against DoS with rate limiting.
 Auth: Provides username/password authentication.
 Use a 7-day PRO license trial (code: ZFGYUXVXABSUH7KTMQG4FG4B).
+
+
+<br><br>
+<img src="SS/dashboard.png">  <br><br><br>
 ----------------------Screenshot: Dashboard with DVWA added.---------------------------
 
 4.2 Setting up Application Rules
@@ -220,26 +227,41 @@ Requires SSL certificate.
 - Generate private key:
   ```bash
   openssl genrsa -out private.key 4096
+
   
 - Generate private.csr:
   ```bash
   openssl req -new -key private.key -out private.csr
+
+<br><br>
+<img src="SS/private.png">  <br><br><br>
 ---------------------------------private ------------------------------------------------
 
 - Generate SSL certificate:
   ```bash
   openssl x509 -req -days 365 -in private.csr -signkey private.key -out private.crt
 
+<br><br>
+<img src="SS/ssl key.png">  <br><br><br>
+
+
 --------------------------ssl key -------------------------------------------
 
 
 Import into SafeLine:
 
+<br><br>
+<img src="SS/import.png">  <br><br><br>
 ------------------------------<Import image> -----------------------------
 
 4.4 Testing the Application Rule from Kali Browser
 Access http://dvwa.local from Kali; it redirects to https://dvwa.local.  
 
+
+<br><br>
+<img src="SS/https 1.png">  <br><br><br>
+<img src="SS/https 2.png">  <br><br><br>
+<img src="SS/https 3.png">  <br><br><br>
 --------------------------- https 1 and 2 3------------------------------
 
 </details>
