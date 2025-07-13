@@ -17,6 +17,10 @@ Create Your Own Web Application Firewall using SafeLine WAF
   ```bash
   ping 10.0.0.147  # From Kali
   ping 10.0.0.41   # From Ubuntu
+
+<br><br>
+<img src="SS/ping from Kali.png">  <br><br><br>
+<img src="SS/ping from ubuntu.png">  <br><br><br>
 --------------------- Add image ------------------------------
 </details>
 
@@ -58,6 +62,12 @@ Configure DVWA Database:
   sudo nano /etc/hosts
 
 Add:  &ensp;  10.0.0.147 dvwa.local
+
+<br><br>
+<img src="SS/dns res ubuntu.png">  <br><br><br>
+<img src="SS/dsn res kali.png">  <br><br><br>
+
+
 --------------------Add image dns------------------------
 This will allow to access DVWA at http://dvwa.local:8080/DVWA/ from Kali.
 
@@ -69,6 +79,9 @@ This will allow to access DVWA at http://dvwa.local:8080/DVWA/ from Kali.
 - Installing OpenSSL
   ```bash
   sudo apt-get install -y openssl
+
+<br><br>
+<img src="SS/installing openssl.png">  <br><br><br>
 ----------------------------add image install openssl---------------------------
 
 <br>
@@ -94,6 +107,8 @@ Set MySQL root password: ubuntu(for testing purpose).
 Note: This is what the config.php file could be shwoing as DVWA/config/config.inc.php.dist
 Rename to DVWA/config/config.inc.php.
 
+<br><br>
+<img src="SS/config.php.png">  <br><br><br>
 ----------------------add image config.php-------------------------------------
 
 - Create DVWA database:
@@ -148,6 +163,8 @@ Change:
 to:
 <VirtualHost *:8080>
 
+<br><br>
+<img src="SS/default.conf.png">  <br><br><br>
 --------------------------add image default--------------------------
 
 <br>
