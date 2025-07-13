@@ -1,422 +1,518 @@
-# &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;Safeline WAF
+# SafeLine WAF
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;Self Hosted Web Application Firewall
+<div align="center">
+  <h2>Self Hosted Web Application Firewall</h2>
+  <img src="SS/safeline.png" alt="SafeLine WAF">
+</div>
 
-&nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;<img src="SS/safeline.png">  <br><br><br>
+---
 
-# About SafeLine
-SafeLine is an advanced Web Application Firewall (WAF) designed to protect web applications from a wide range of cyber threats with robust security measures. Developed by Chaitin Tech, it offers an open-source solution that combines ease of deployment with powerful protection capabilities. Ideal for both enterprise and individual use, SafeLine safeguards applications like the Damn Vulnerable Web Application (DVWA) in this cybersecurity homelab project. It integrates seamlessly with platforms such as Ubuntu Server, providing real-time threat detection and mitigation. This project demonstrates SafeLine's effectiveness in securing web applications against attacks like SQL injection.
+## About SafeLine
 
-<br><br>
-## Key Features of SafeLine:
-<li>Comprehensive Threat Protection: Detects and blocks various attacks, including SQL injection, XSS, and brute force attempts, ensuring robust application security.
-<li>HTTP Flood Defense: Implements rate-limiting to mitigate denial-of-service (DoS) attacks, protecting server resources from excessive requests.
-<li>Customizable Rules: Allows users to create tailored rules, such as blocking specific IPs (e.g., 10.0.0.41), for precise security control.
-<li>SSL/TLS Support: Supports secure communication by integrating self-signed or custom SSL certificates for encrypted connections.
-<li>User-Friendly Dashboard: Provides an intuitive interface for monitoring traffic, analyzing attack logs, and configuring security settings in real time.
+SafeLine is an advanced Web Application Firewall (WAF) designed to protect web applications from a wide range of cyber threats with robust security measures. Developed by Chaitin Tech, it offers an open-source solution that combines ease of deployment with powerful protection capabilities. 
 
-# ########################################################################
-<details>
-  
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 1: Installing Both Machines on VMware</summary>
+Ideal for both enterprise and individual use, SafeLine safeguards applications like the Damn Vulnerable Web Application (DVWA) in this cybersecurity homelab project. It integrates seamlessly with platforms such as Ubuntu Server, providing real-time threat detection and mitigation. This project demonstrates SafeLine's effectiveness in securing web applications against attacks like SQL injection.
 
-- **Kali Linux (IP: 10.0.0.41)**:
-  - Download from [kali.org](https://www.kali.org/get-kali).
-  - Install in VMware with 2 GB RAM, 20 GB disk, and bridged networking.
-- **Ubuntu Server (IP: 10.0.0.147)**:
-  - Download from [ubuntu.com](https://ubuntu.com/download/server).
-  - Install with 2 GB RAM, 20 GB disk, and bridged networking.
-- **Check IPs and Connectivity**:
-  ```bash
-  ping 10.0.0.147  # From Kali
-  ping 10.0.0.41   # From Ubuntu
+## Key Features of SafeLine
 
-<br><br>
-<img src="SS/ping from Kali.png">  <br><br><br>
-<img src="SS/ping from ubuntu.png">  <br><br><br>
+- **Comprehensive Threat Protection**: Detects and blocks various attacks, including SQL injection, XSS, and brute force attempts, ensuring robust application security.
+- **HTTP Flood Defense**: Implements rate-limiting to mitigate denial-of-service (DoS) attacks, protecting server resources from excessive requests.
+- **Customizable Rules**: Allows users to create tailored rules, such as blocking specific IPs (e.g., 10.0.0.41), for precise security control.
+- **SSL/TLS Support**: Supports secure communication by integrating self-signed or custom SSL certificates for encrypted connections.
+- **User-Friendly Dashboard**: Provides an intuitive interface for monitoring traffic, analyzing attack logs, and configuring security settings in real time.
+
+---
+
+## Implementation Guide
+
+<details id="step1">
+<summary><strong>Step 1: Installing Both Machines on VMware</strong></summary>
+
+### Machine Setup
+
+**Kali Linux (IP: 10.0.0.41)**:
+- Download from [kali.org](https://www.kali.org/get-kali)
+- Install in VMware with 2 GB RAM, 20 GB disk, and bridged networking
+
+**Ubuntu Server (IP: 10.0.0.147)**:
+- Download from [ubuntu.com](https://ubuntu.com/download/server)
+- Install with 2 GB RAM, 20 GB disk, and bridged networking
+
+### Connectivity Testing
+
+Check IPs and connectivity between machines:
+
+```bash
+ping 10.0.0.147  # From Kali
+ping 10.0.0.41   # From Ubuntu
+```
+
+<img src="SS/ping from Kali.png" alt="Ping from Kali">
+
+<img src="SS/ping from ubuntu.png" alt="Ping from Ubuntu">
 
 </details>
 
-# ########################################################################
+<details id="step2">
+<summary><strong>Step 2: Prerequisites</strong></summary>
 
-<details>
+### 2.1 Clone DVWA from Git
 
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 2: Prerequisites</summary>
+Clone DVWA (or download):
+```bash
+cd /var/www/html
+sudo git clone https://github.com/digininja/DVWA.git
+```
 
-#### 2.1 Clone DVWA from git:
+If git is not installed, install it first:
+```bash
+sudo apt-get install -y git
+```
 
-- Clone DVWA (or download):
-  ```bash
-  cd /var/www/html
-  sudo git clone https://github.com/digininja/DVWA.git
+### 2.2 Set File Permissions
 
-- If git is not installed, install it first:
-  ```bash
-  sudo apt-get install -y git
-<br>
-<br>
+```bash
+sudo chown -R www-data:www-data DVWA
+sudo chmod -R 755 DVWA
+```
 
-#### 2.2.Set File Permissions:
+### 2.3 DNS Resolution Setup
 
-- 
-  ```bash
-  sudo chown -R www-data:www-data DVWA
-  sudo chmod -R 755 DVWA
+Edit `/etc/hosts` on both Kali and Ubuntu:
+```bash
+sudo nano /etc/hosts
+```
 
+Add: `10.0.0.147 dvwa.local`
 
-<br>
-<br>
+This will allow access to DVWA at `http://dvwa.local:8080/DVWA/` from Kali.
 
-#### 2.3 DNS Resolution Setup
+<img src="SS/dns res ubuntu.png" alt="DNS Resolution Ubuntu">
 
+<img src="SS/dsn res kali.png" alt="DNS Resolution Kali">
 
-- Edit /etc/hosts on both Kali and Ubuntu:
-    ```bash
-  sudo nano /etc/hosts
+### 2.4 Ubuntu Configurations
 
-Add:  &ensp;  10.0.0.147 dvwa.local
+**Installing OpenSSL**
+```bash
+sudo apt-get install -y openssl
+```
 
-This will allow to access DVWA at http://dvwa.local:8080/DVWA/ from Kali.
+<img src="SS/installing openssl.png" alt="Installing OpenSSL">
 
-<br><br>
-<img src="SS/dns res ubuntu.png">  <br><br><br>
-<img src="SS/dsn res kali.png">  <br><br><br>
+**Installing and Configuring LAMP Stack**
 
+This installs Apache2, PHP and MySQL:
+```bash
+sudo apt-get install -y apache2 php php-mysql mysql-server
+sudo mysql_secure_installation
+```
 
-<br>
-<br>
+Set MySQL root password: `ubuntu` (for testing purpose)
 
-#### 2.4 Ubuntu Configurations
+**DVWA Configuration**
 
-- Installing OpenSSL
-  ```bash
-  sudo apt-get install -y openssl
+DVWA has a config file at `DVWA/config/config.inc.php`. Update it if necessary:
+```php
+$DBMS = 'MySQL';
+$db = 'dvwa';
+$user = 'dvwa_user';
+$pass = 'p@ssw0rd';
+$host = 'localhost';
+```
 
-<br><br>
-<img src="SS/installing openssl.png">  <br><br><br>
+> **Note**: The config.php file may be showing as `DVWA/config/config.inc.php.dist`. Rename to `DVWA/config/config.inc.php`.
 
+<img src="SS/config.php.png" alt="Config PHP">
 
-<br>
-<br>
+**Create DVWA Database**
+```bash
+sudo mysql -u root -p
+CREATE DATABASE dvwa;
+CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'p@ssw0rd';
+GRANT ALL ON dvwa.* TO 'dvwa_user'@'localhost';
+FLUSH PRIVILEGES;
+exit;
+```
 
-- Installing and Configuring LAMP Stack : this install Apache2, PHP and MySQL:
-  ```bash
-  sudo apt-get install -y apache2 php php-mysql mysql-server
-  sudo mysql_secure_installation
-Set MySQL root password: ubuntu(for testing purpose).
+**Initialize DVWA**
+- Navigate to `http://dvwa.local/setup.php` in your browser
+- Click **`[Create/ResetDatabase]`**
+- This will automatically create a random database
 
-<br>
-<br>
+### 2.5 Changing the DVWA Listening Port to 8080
 
-- DVWA has a config file at DVWA/config/config.inc.php. Update it if necessary:
-  ```bash
-  $DBMS = 'MySQL';
-  $db = 'dvwa';
-  $user = 'dvwa_user';
-  $pass = 'p@ssw0rd';
-  $host = 'localhost';
-
-Note: The config.php file may be shwoing as DVWA/config/config.inc.php.dist
-Rename to DVWA/config/config.inc.php.
-
-<br><br>
-<img src="SS/config.php.png">  <br><br><br>
-
-
-- Create DVWA database:
-  ```bash
-  sudo mysql -u root -p
-  CREATE DATABASE dvwa;
-  CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'p@ssw0rd';
-  GRANT ALL ON dvwa.* TO 'dvwa_user'@'localhost';
-  FLUSH PRIVILEGES;
-  exit;
-
-- Create a new database and user in MySQL:
-  ```bash
-  sudo mysql -u root -p
-  CREATE DATABASE dvwa;
-  CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'p@ssw0rd';
-  GRANT ALL ON dvwa.* TO 'dvwa_user'@'localhost';
-  FLUSH PRIVILEGES;
-  exit;
-<br>
-
-To Initialize DVWA:
-Navigate to http://dvwa.local/setup.php in your browser. <br>
-Click **`[Create/ResetDatabase]`**. <br>
-This will automatically create a random database
-
-<br>
-<br>
-
-#### 2.5. Changing the DVWA Listening Port to 8080
-
-- Edit Apache configuration:
-  ```bash
-  sudo nano /etc/apache2/ports.conf
+Edit Apache configuration:
+```bash
+sudo nano /etc/apache2/ports.conf
+```
 
 Change:
+```
 Listen 80
-
+```
 to:
+```
 Listen 8080
+```
 
-<br>
+### 2.6 Changing the Virtual Host to Port
 
-#### 2.6 Changing the Virtual host to Port
-
-- Edit the apache Virtual host:
-  ```bash
-   sudo nano /etc/apache2/sites-available/000-default.conf
+Edit the apache Virtual host:
+```bash
+sudo nano /etc/apache2/sites-available/000-default.conf
+```
 
 Change:
+```
 <VirtualHost *:80>
-
+```
 to:
+```
 <VirtualHost *:8080>
+```
 
-<br><br>
-<img src="SS/default.conf.png">  <br><br><br>
+<img src="SS/default.conf.png" alt="Default Configuration">
 
-
-<br>
-<br>
-
-- Restart Apache:
-  ```bash
-  sudo systemctl restart apache2
-
+**Restart Apache**
+```bash
+sudo systemctl restart apache2
+```
 
 </details>
 
-# ########################################################################
+<details id="step3">
+<summary><strong>Step 3: Installing SafeLine in Ubuntu</strong></summary>
 
-<details>
+### SafeLine Installation
 
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 3: Installing SafeLine in Ubuntu</summary>
-<br>
+Install SafeLine WAF:
+```bash
+bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
+```
 
-- Install SafeLine WAF:
-  ```bash
-  bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
-<br> Reference: https://safepoint.cloud/landing/safeline
+**Reference**: [https://safepoint.cloud/landing/safeline](https://safepoint.cloud/landing/safeline)
 
-<br><br>
-<img src="SS/install safeline.png">  <br><br><br>
+<img src="SS/install safeline.png" alt="Install SafeLine">
 
-Access the dashboard at https://10.0.0.147:9443 with provided credentials.
+Access the dashboard at `https://10.0.0.147:9443` with provided credentials.
 
-<br><br>
-<img src="SS/install cred.png">  <br><br><br>
-
+<img src="SS/install cred.png" alt="Installation Credentials">
 
 </details>
 
-# ########################################################################
+<details id="step4">
+<summary><strong>Step 4: Using SafeLine</strong></summary>
 
-<details>
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 4: Using SafeLine</summary>
+### 4.1 SafeLine WAF Dashboard
 
+**Application Tab**: Add DVWA (www.dvwa.local, port 443, reverse proxy to http://10.0.0.147:8080)
 
-#### 4.1 SafeLine WAF Dashboard
+**HTTP Flood**: Protects against DoS with rate limiting
 
-Application Tab: Add DVWA (www.dvwa.local, port 443, reverse proxy to http://10.0.0.147:8080).
-HTTP Flood: Protects against DoS with rate limiting.
-Auth: Provides username/password authentication.
-Used a 7-day PRO license trial.
+**Auth**: Provides username/password authentication
 
-<br><br>
-#### Application tab:
-Whichever application that we need to be protected, we can link it to the application tab. In our case we are using the DVWA
+> Used a 7-day PRO license trial
 
-<br><br>
-#### HTTP flood:
-Protect DOS attacks by rate limiting feature and protects from HTTP floods attack
+#### Dashboard Components
 
-<br><br>
-#### Auth:
-Provides username and password authentication for your applications and websites
+- **Application tab**: Link applications that need protection (DVWA in our case)
+- **HTTP flood**: Protects against DOS attacks using rate limiting features
+- **Auth**: Provides username and password authentication for applications and websites
 
+<img src="SS/dashboard.png" alt="SafeLine Dashboard">
 
-<br><br>
-<img src="SS/dashboard.png">  <br><br><br>
+### 4.2 Setting up Application Rules
 
+**Configuration**:
+- Domain: `www.dvwa.local`
+- Port: `443` (HTTPS)
+- Reverse Proxy: `http://10.0.0.147:8080`
+- Requires SSL certificate
 
-#### 4.2 Setting up Application Rules
+Set the Reverse proxy to domain (ubuntu) IP: `10.0.0.147:8080`
 
-Domain: www.dvwa.local
-Port: 443 (HTTPS)
-Reverse Proxy: http://10.0.0.147:8080
-Requires SSL certificate.
+> **Note**: Any request to the service comes into the SafeLine firewall and forwards the request to port 8080 on the server in the background.
 
-<br><br>
-Set the Reverse proxy to  domain(ubuntu) ip: 	10.0.0.147:8080 <br>
-Note: What this does is any request to the service is actually coming into the Safeline firewall and on the background it forward the request to port 8080 on the server
+### 4.3 Creating SSL Certificate
 
-<br><br>
+Generate private key:
+```bash
+openssl genrsa -out private.key 4096
+```
 
-#### 4.3 Creating SSL Certificate
-- Generate private key:
-  ```bash
-  openssl genrsa -out private.key 4096
+Generate private.csr:
+```bash
+openssl req -new -key private.key -out private.csr
+```
 
-  
-- Generate private.csr:
-  ```bash
-  openssl req -new -key private.key -out private.csr
+<img src="SS/private.png" alt="Private Key Generation">
 
-<br><br>
-<img src="SS/private.png">  <br><br><br>
+Generate SSL certificate:
+```bash
+openssl x509 -req -days 365 -in private.csr -signkey private.key -out private.crt
+```
 
-
-- Generate SSL certificate:
-  ```bash
-  openssl x509 -req -days 365 -in private.csr -signkey private.key -out private.crt
-
-<br><br>
-<img src="SS/ssl key.png">  <br><br><br>
-
-
-
+<img src="SS/ssl key.png" alt="SSL Key Generation">
 
 Import into SafeLine:
 
-<br><br>
-<img src="SS/import.png">  <br><br><br>
+<img src="SS/import.png" alt="SSL Import">
 
+### 4.4 Testing the Application Rule from Kali Browser
 
-#### 4.4 Testing the Application Rule from Kali Browser
-Access http://dvwa.local from Kali; it redirects to https://dvwa.local.  
-This rule will allow allow the incoming traffic only through port 443 which is HTTPS.
+Access `http://dvwa.local` from Kali; it redirects to `https://dvwa.local`.
 
+This rule allows incoming traffic only through port 443 (HTTPS).
 
-<br><br>
-<img src="SS/https 1.png">  <br><br><br>
-<img src="SS/https 2.png">  <br><br><br>
-<img src="SS/https 3.png">  <br><br><br>
+<img src="SS/https 1.png" alt="HTTPS Test 1">
 
+<img src="SS/https 2.png" alt="HTTPS Test 2">
 
-</details>
-
-# ########################################################################
-
-<details>
-  
-
-
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 5: Setting up HTTP Flood Rules</summary>
-
-#### Set rate limiting (block IPs after 3 requests in 10 seconds for 5 minutes):
-
-Test by accessing DVWA multiple times from Kali.
-Check SafeLine dashboard for blocked IPs.
-
-For testing, if more than 3 access request it made from an ip within 10 seconds the rule is set to to block the ip for 5 mins
-<br><br>
-<img src="SS/flood 1.png">  <br><br><br>
-<img src="SS/flood 2.png">  <br><br><br>
-We are testing it out by accessing the site form Kali and clicking on multiple options.
-The access is denied all of a sudden.
-<img src="SS/flood 3.png">  <br><br><br>
-Looking at the HTTP flood request in the Safeline dashboard, the <KALI> ip was blocked. There is also the option to unblock the ip from the dashboard.
-<img src="SS/flood 4.png">  <br><br><br>
-
+<img src="SS/https 3.png" alt="HTTPS Test 3">
 
 </details>
 
-# ########################################################################
+<details id="step5">
+<summary><strong>Step 5: Setting up HTTP Flood Rules</strong></summary>
 
-<details>
-  
+### Rate Limiting Configuration
 
+Set rate limiting to block IPs after 3 requests in 10 seconds for 5 minutes.
 
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 6: Setting Authentication Rule</summary>
+**Testing Process**:
+- Access DVWA multiple times from Kali
+- Check SafeLine dashboard for blocked IPs
 
-#### Enable authentication in SafeLine:
+For testing, if more than 3 access requests are made from an IP within 10 seconds, the rule blocks the IP for 5 minutes.
 
-Credentials for testing: admin / password
-<br><br>
-<img src="SS/auth 1.png">  <br><br><br>
+<img src="SS/flood 1.png" alt="Flood Rule 1">
+
+<img src="SS/flood 2.png" alt="Flood Rule 2">
+
+Testing by accessing the site from Kali and clicking on multiple options. Access is denied suddenly.
+
+<img src="SS/flood 3.png" alt="Flood Rule 3">
+
+Looking at the HTTP flood request in the SafeLine dashboard, the Kali IP was blocked. There's also an option to unblock the IP from the dashboard.
+
+<img src="SS/flood 4.png" alt="Flood Rule 4">
+
+</details>
+
+<details id="step6">
+<summary><strong>Step 6: Setting Authentication Rule</strong></summary>
+
+### Authentication Setup
+
+Enable authentication in SafeLine with test credentials:
+- Username: `admin`
+- Password: `password`
+
+<img src="SS/auth 1.png" alt="Authentication Setup">
+
 Test from Kali; an authentication page appears before DVWA.
-<img src="SS/auth 2.png">  <br><br><br>
-The firewall will capture the request, waiting for approval.
-<br> Note: The rules can be also set  to auto approve after successful authentication.
-<img src="SS/auth 3.png">  <br><br><br>
 
+<img src="SS/auth 2.png" alt="Authentication Test">
 
+The firewall captures the request, waiting for approval.
 
-</details>
+> **Note**: Rules can also be set to auto-approve after successful authentication.
 
-# ########################################################################
-
-<details>
-  
-
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 7: Creating Custom Rules</summary>
-
-<br>
-The rule is set to deny any request from Kali IP (10.0.0.41):
-
-#### Add deny rule in SafeLine.
-
-<br><br>
-<img src="SS/custom 1.png">  <br><br><br>
-Test from Kali; access is blocked.
-<img src="SS/custom 2.png">  <br><br><br>
-
-
+<img src="SS/auth 3.png" alt="Authentication Approval">
 
 </details>
 
-# ########################################################################
+<details id="step7">
+<summary><strong>Step 7: Creating Custom Rules</strong></summary>
 
-<details>
+### Custom IP Blocking
 
+Create a rule to deny any request from Kali IP (10.0.0.41):
 
+Add deny rule in SafeLine:
 
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 8: Preventing Attacks</summary>
+<img src="SS/custom 1.png" alt="Custom Rule Setup">
 
-#### 8.1 Trying SQL Injection with Balanced Rules
+Test from Kali; access is blocked:
 
-In DVWA, set security to low, try SQL injection (e.g., admin' OR '1'='1).
-SafeLine blocks it; check dashboard logs :SQL injection blocked by SafeLine.
-
-<br><br>
-<img src="SS/balanced 1.png">  <br><br><br>
-<img src="SS/balanced 2.png">  <br><br><br>
-
-
-#### 8.2 Disabling Attack Rules
-
-Disable SafeLine attack rules; SQL injection succeeds, revealing usernames/passwords.
-Screenshot: SQL injection succeeds without rules.
-
-<br><br>
-<img src="SS/disable 1.png">  <br><br><br>
-<img src="SS/disable 2.png">  <br><br><br>
-
-
-Note:<br>
-Other attacks such as hping, http floods from CLI, sqlmap etc. can be also performed and monitored using Safeline dashboard.
+<img src="SS/custom 2.png" alt="Custom Rule Test">
 
 </details>
 
-# ########################################################################
+<details id="step8">
+<summary><strong>Step 8: Preventing Attacks</strong></summary>
 
-<details>
-  
+### 8.1 SQL Injection with Balanced Rules
 
+**Testing Process**:
+1. In DVWA, set security to low
+2. Try SQL injection (e.g., `admin' OR '1'='1`)
+3. SafeLine blocks it
+4. Check dashboard logs for SQL injection blocked by SafeLine
 
-<summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 9: Statistics Dashboard</summary>
+<img src="SS/balanced 1.png" alt="Balanced Rules 1">
 
-#### View SafeLine dashboard for request counts, blocked IPs, and attack logs.  
+<img src="SS/balanced 2.png" alt="Balanced Rules 2">
 
+### 8.2 Disabling Attack Rules
 
-<br><br>
-<img src="SS/stat.png">  <br><br><br>
+**Demonstration**:
+- Disable SafeLine attack rules
+- SQL injection succeeds, revealing usernames/passwords
 
+<img src="SS/disable 1.png" alt="Disabled Rules 1">
+
+<img src="SS/disable 2.png" alt="Disabled Rules 2">
+
+> **Note**: Other attacks such as hping, HTTP floods from CLI, sqlmap etc. can also be performed and monitored using the SafeLine dashboard.
 
 </details>
 
+<details id="step9">
+<summary><strong>Step 9: Statistics Dashboard</strong></summary>
 
+### Monitoring and Analytics
+
+View SafeLine dashboard for:
+- Request counts
+- Blocked IPs
+- Attack logs
+- Real-time statistics
+
+<img src="SS/stat.png" alt="Statistics Dashboard">
+
+</details>
+
+---
+
+## Conclusion
+
+SafeLine WAF provides comprehensive protection for web applications through its intuitive dashboard and powerful security features. This implementation demonstrates effective mitigation of common web application vulnerabilities including SQL injection, DoS attacks, and unauthorized access attempts.
+
+<!-- The system's flexibility in creating custom rules and real-time monitoring capabilities make it an excellent choice for both educational purposes and production environments.
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const details = document.querySelectorAll('details');
+    
+    details.forEach(detail => {
+        detail.addEventListener('toggle', function() {
+            if (this.open) {
+                // Close all other details
+                details.forEach(otherDetail => {
+                    if (otherDetail !== this && otherDetail.open) {
+                        otherDetail.open = false;
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+
+<style>
+details {
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+details:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+details[open] {
+    background: #fff;
+    border-color: #2a7ae2;
+}
+
+summary {
+    padding: 15px 20px;
+    cursor: pointer;
+    background: #f0f0f0;
+    border-radius: 8px;
+    font-size: 1.1em;
+    color: #2a7ae2;
+    transition: background 0.3s ease;
+}
+
+summary:hover {
+    background: #e8f4f8;
+}
+
+details[open] summary {
+    background: #2a7ae2;
+    color: white;
+    margin-bottom: 15px;
+}
+
+details div, details > *:not(summary) {
+    padding: 0 20px 20px;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+pre {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 10px 0;
+}
+
+blockquote {
+    border-left: 4px solid #2a7ae2;
+    margin: 15px 0;
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border-radius: 0 5px 5px 0;
+}
+
+h1, h2, h3 {
+    color: #2c3e50;
+}
+
+h1 {
+    text-align: center;
+    border-bottom: 3px solid #2a7ae2;
+    padding-bottom: 10px;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+li {
+    margin: 8px 0;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, #2a7ae2, #4a90e2, #2a7ae2);
+    margin: 30px 0;
+}
+</style> */
