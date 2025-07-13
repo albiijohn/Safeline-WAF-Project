@@ -25,40 +25,49 @@ Create Your Own Web Application Firewall using SafeLine WAF
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 2: Prerequisites</summary>
 
 2.1 DNS Resolution Setup
-Edit /etc/hosts on both Kali and Ubuntu:
-sudo nano /etc/hosts
+- Edit /etc/hosts on both Kali and Ubuntu:
+    ```bash
+  sudo nano /etc/hosts
 
 Add:
 10.0.0.147 dvwa.local
 
 Access DVWA at http://dvwa.local:8080/DVWA from Kali.
+
 2.2 Ubuntu Configurations
+
 2.2.1 Installing OpenSSL
-sudo apt-get install -y openssl
+- Installing OpenSSL
+- ```bash
+    sudo apt-get install -y openssl
 
 2.2.2 Installing and Configuring LAMP Stack
 Install Apache2, PHP, and MySQL:
-sudo apt-get install -y apache2 php php-mysql mysql-server
-sudo mysql_secure_installation
+- ```bash
+  sudo apt-get install -y apache2 php php-mysql mysql-server
+  sudo mysql_secure_installation
 
 Set MySQL root password: ubuntu.
 Configure DVWA (/var/www/html/DVWA/config/config.inc.php):
-sudo cp /var/www/html/DVWA/config/config.inc.php.dist /var/www/html/DVWA/config/config.inc.php
-sudo sed -i "s/'db_user' => '.*'/'db_user' => 'dvwa_user'/" /var/www/html/DVWA/config/config.inc.php
-sudo sed -i "s/'db_password' => '.*'/'db_password' => 'p@ssw0rd'/" /var/www/html/DVWA/config/config.inc.php
-sudo sed -i "s/'db_database' => '.*'/'db_database' => 'dvwa'/" /var/www/html/DVWA/config/config.inc.php
+- ```bash
+    sudo cp /var/www/html/DVWA/config/config.inc.php.dist /var/www/html/DVWA/config/config.inc.php
+    sudo sed -i "s/'db_user' => '.*'/'db_user' => 'dvwa_user'/" /var/www/html/DVWA/config/config.inc.php
+    sudo sed -i "s/'db_password' => '.*'/'db_password' => 'p@ssw0rd'/" /var/www/html/DVWA/config/config.inc.php
+    sudo sed -i "s/'db_database' => '.*'/'db_database' => 'dvwa'/" /var/www/html/DVWA/config/config.inc.php
 
 Create DVWA database:
-sudo mysql -u root -p
-CREATE DATABASE dvwa;
-CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'p@ssw0rd';
-GRANT ALL ON dvwa.* TO 'dvwa_user'@'localhost';
-FLUSH PRIVILEGES;
-exit;
+- ```bash
+  sudo mysql -u root -p
+  CREATE DATABASE dvwa;
+  CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'p@ssw0rd';
+  GRANT ALL ON dvwa.* TO 'dvwa_user'@'localhost';
+  FLUSH PRIVILEGES;
+  exit;
 
 2.2.3 Changing the DVWA Listening Port to 8080
 Edit Apache configuration:
-sudo nano /etc/apache2/ports.conf
+- ```bash
+  sudo nano /etc/apache2/ports.conf
 
 Change:
 Listen 80
@@ -67,7 +76,8 @@ to:
 Listen 8080
 
 Update virtual host:
-sudo nano /etc/apache2/sites-available/000-default.conf
+- ```bash
+  sudo nano /etc/apache2/sites-available/000-default.conf
 
 Change:
 <VirtualHost *:80>
@@ -76,7 +86,8 @@ to:
 <VirtualHost *:8080>
 
 Restart Apache:
-sudo systemctl restart apache2
+- ```bash
+  sudo systemctl restart apache2
 
 
 Screenshot: LAMP stack configured and DVWA accessible.
@@ -90,7 +101,8 @@ Screenshot: LAMP stack configured and DVWA accessible.
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 3: Installing SafeLine in Ubuntu</summary>
 
 Install SafeLine WAF:
-bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
+- ```bash
+  bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
 
 Access the dashboard at https://10.0.0.147:9443 with provided credentials.Reference: safepoint.cloud  
 
@@ -121,8 +133,11 @@ Requires SSL certificate.
 
 4.3 Creating SSL Certificate
 Generate SSL certificate:
-sudo mkdir /etc/ssl/dvwa
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+- ```bash
+  sudo mkdir /etc/ssl/dvwa
+
+- ```bash
+  sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout /etc/ssl/dvwa/dvwa.key \
   -out /etc/ssl/dvwa/dvwa.crt
 
