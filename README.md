@@ -1,13 +1,14 @@
-# Safeline-WAF
-Create Your Own Web Application Firewall using SafeLine WAF
+# &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;Safeline WAF
 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;Self Hosted Web Application Firewall
 
+&nbsp;&nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;<img src="SS/safeline.png">  <br><br><br>
 
-<h1>About SafeLine</h1>
+# About SafeLine
 SafeLine is an advanced Web Application Firewall (WAF) designed to protect web applications from a wide range of cyber threats with robust security measures. Developed by Chaitin Tech, it offers an open-source solution that combines ease of deployment with powerful protection capabilities. Ideal for both enterprise and individual use, SafeLine safeguards applications like the Damn Vulnerable Web Application (DVWA) in this cybersecurity homelab project. It integrates seamlessly with platforms such as Ubuntu Server, providing real-time threat detection and mitigation. This project demonstrates SafeLine's effectiveness in securing web applications against attacks like SQL injection.
 
 <br><br>
-Key Features of SafeLine:
+## Key Features of SafeLine:
 <li>Comprehensive Threat Protection: Detects and blocks various attacks, including SQL injection, XSS, and brute force attempts, ensuring robust application security.
 <li>HTTP Flood Defense: Implements rate-limiting to mitigate denial-of-service (DoS) attacks, protecting server resources from excessive requests.
 <li>Customizable Rules: Allows users to create tailored rules, such as blocking specific IPs (e.g., 10.0.0.41), for precise security control.
@@ -42,7 +43,7 @@ Key Features of SafeLine:
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 2: Prerequisites</summary>
 
-<h2>2.1 Clone DVWA from git:</h2>
+#### 2.1 Clone DVWA from git:
 
 - Clone DVWA (or download):
   ```bash
@@ -54,7 +55,8 @@ Key Features of SafeLine:
   sudo apt-get install -y git
 <br>
 <br>
-<h2>2.2.Set File Permissions:</h2>
+
+#### 2.2.Set File Permissions:
 
 - 
   ```bash
@@ -65,7 +67,7 @@ Key Features of SafeLine:
 <br>
 <br>
 
-<h2>2.3 DNS Resolution Setup</h2>
+#### 2.3 DNS Resolution Setup
 
 
 - Edit /etc/hosts on both Kali and Ubuntu:
@@ -84,7 +86,7 @@ This will allow to access DVWA at http://dvwa.local:8080/DVWA/ from Kali.
 <br>
 <br>
 
-<h2>2.4 Ubuntu Configurations</h2>
+#### 2.4 Ubuntu Configurations
 
 - Installing OpenSSL
   ```bash
@@ -148,7 +150,7 @@ This will automatically create a random database
 <br>
 <br>
 
-<h2>2.5. Changing the DVWA Listening Port to 8080</h2>
+#### 2.5. Changing the DVWA Listening Port to 8080
 
 - Edit Apache configuration:
   ```bash
@@ -162,7 +164,7 @@ Listen 8080
 
 <br>
 
-<h2>2.6 Changing the Virtual host to Port</h2>
+#### 2.6 Changing the Virtual host to Port
 
 - Edit the apache Virtual host:
   ```bash
@@ -193,6 +195,7 @@ to:
 <details>
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 3: Installing SafeLine in Ubuntu</summary>
+<br>
 
 - Install SafeLine WAF:
   ```bash
@@ -216,23 +219,23 @@ Access the dashboard at https://10.0.0.147:9443 with provided credentials.
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 4: Using SafeLine</summary>
 
 
-4.1 SafeLine WAF Dashboard
+#### 4.1 SafeLine WAF Dashboard
 
 Application Tab: Add DVWA (www.dvwa.local, port 443, reverse proxy to http://10.0.0.147:8080).
 HTTP Flood: Protects against DoS with rate limiting.
 Auth: Provides username/password authentication.
-Use a 7-day PRO license trial (code: ZFGYUXVXABSUH7KTMQG4FG4B).
+Used a 7-day PRO license trial.
 
 <br><br>
-Application tab:
+#### Application tab:
 Whichever application that we need to be protected, we can link it to the application tab. In our case we are using the DVWA
 
 <br><br>
-HTTP flood:
+#### HTTP flood:
 Protect DOS attacks by rate limiting feature and protects from HTTP floods attack
 
 <br><br>
-Auth:
+#### Auth:
 Provides username and password authentication for your applications and websites
 
 
@@ -240,7 +243,7 @@ Provides username and password authentication for your applications and websites
 <img src="SS/dashboard.png">  <br><br><br>
 
 
-4.2 Setting up Application Rules
+#### 4.2 Setting up Application Rules
 
 Domain: www.dvwa.local
 Port: 443 (HTTPS)
@@ -248,12 +251,12 @@ Reverse Proxy: http://10.0.0.147:8080
 Requires SSL certificate.
 
 <br><br>
-Set the Reverse proxy to our domain(ubuntu) ip: 	10.0.0.147:8080 <br>
+Set the Reverse proxy to  domain(ubuntu) ip: 	10.0.0.147:8080 <br>
 Note: What this does is any request to the service is actually coming into the Safeline firewall and on the background it forward the request to port 8080 on the server
 
 <br><br>
 
-4.3 Creating SSL Certificate
+#### 4.3 Creating SSL Certificate
 - Generate private key:
   ```bash
   openssl genrsa -out private.key 4096
@@ -283,7 +286,7 @@ Import into SafeLine:
 <img src="SS/import.png">  <br><br><br>
 
 
-4.4 Testing the Application Rule from Kali Browser
+#### 4.4 Testing the Application Rule from Kali Browser
 Access http://dvwa.local from Kali; it redirects to https://dvwa.local.  
 This rule will allow allow the incoming traffic only through port 443 which is HTTPS.
 
@@ -304,7 +307,7 @@ This rule will allow allow the incoming traffic only through port 443 which is H
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 5: Setting up HTTP Flood Rules</summary>
 
-Set rate limiting (block IPs after 3 requests in 10 seconds for 5 minutes):
+#### Set rate limiting (block IPs after 3 requests in 10 seconds for 5 minutes):
 
 Test by accessing DVWA multiple times from Kali.
 Check SafeLine dashboard for blocked IPs.
@@ -330,7 +333,7 @@ Looking at the HTTP flood request in the Safeline dashboard, the <KALI> ip was b
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 6: Setting Authentication Rule</summary>
 
-Enable authentication in SafeLine:
+#### Enable authentication in SafeLine:
 
 Credentials for testing: admin / password
 <br><br>
@@ -352,9 +355,10 @@ The firewall will capture the request, waiting for approval.
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 7: Creating Custom Rules</summary>
 
-The ruke is set to deny any request from Kali IP (10.0.0.41):
+<br>
+The rule is set to deny any request from Kali IP (10.0.0.41):
 
-Add deny rule in SafeLine.
+#### Add deny rule in SafeLine.
 
 <br><br>
 <img src="SS/custom 1.png">  <br><br><br>
@@ -373,7 +377,7 @@ Test from Kali; access is blocked.
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 8: Preventing Attacks</summary>
 
-8.1 Trying SQL Injection with Balanced Rules
+#### 8.1 Trying SQL Injection with Balanced Rules
 
 In DVWA, set security to low, try SQL injection (e.g., admin' OR '1'='1).
 SafeLine blocks it; check dashboard logs :SQL injection blocked by SafeLine.
@@ -383,7 +387,7 @@ SafeLine blocks it; check dashboard logs :SQL injection blocked by SafeLine.
 <img src="SS/balanced 2.png">  <br><br><br>
 
 
-8.2 Disabling Attack Rules
+#### 8.2 Disabling Attack Rules
 
 Disable SafeLine attack rules; SQL injection succeeds, revealing usernames/passwords.
 Screenshot: SQL injection succeeds without rules.
@@ -406,7 +410,7 @@ Other attacks such as hping, http floods from CLI, sqlmap etc. can be also perfo
 
 <summary style="font-weight: bold; color: #2a7ae2; font-size: 1.2em;">Step 9: Statistics Dashboard</summary>
 
-View SafeLine dashboard for request counts, blocked IPs, and attack logs.  
+#### View SafeLine dashboard for request counts, blocked IPs, and attack logs.  
 
 
 <br><br>
