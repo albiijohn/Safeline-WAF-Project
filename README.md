@@ -19,7 +19,7 @@ Ideal for both enterprise and individual use, SafeLine safeguards applications l
 - **HTTP Flood Defense**: Implements rate-limiting to mitigate denial-of-service (DoS) attacks, protecting server resources from excessive requests.
 - **Customizable Rules**: Allows users to create tailored rules, such as blocking specific IPs (e.g., 10.0.0.41), for precise security control.
 - **SSL/TLS Support**: Supports secure communication by integrating self-signed or custom SSL certificates for encrypted connections.
-- **User-Friendly Dashboard**: Provides an intuitive interface for monitoring traffic, analyzing attack logs, and configuring security settings in real time.
+- **User-Friendly Dashboard**: Provides an intuitive interface for monitoring traffic, analyzing attack logs, and configuring security settings in real time. 
 
 ---
 
